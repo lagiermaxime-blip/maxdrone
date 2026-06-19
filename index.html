@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Max Drone — le drone qui repousse les frontières du vol, jusqu'à l'espace." />
+  <title>Max Drone — Le ciel n'est plus une limite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Champ d'étoiles décoratif -->
+  <div class="starfield" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <a href="#hero" class="nav__brand">
+      <span class="nav__logo" aria-hidden="true"></span>
+      MAX&nbsp;DRONE
+    </a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#concept" class="nav__link">Concept</a>
+      <a href="#contact" class="nav__link">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Accueil -->
+    <section id="hero" class="hero">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Nouvelle génération · Vol haute altitude</p>
+        <h1 class="hero__title">Max&nbsp;Drone</h1>
+        <p class="hero__tagline">Le ciel n'est plus une limite.</p>
+        <a href="#concept" class="btn btn--primary">Découvrir le concept</a>
+        <a href="#concept" class="hero__scroll" aria-label="Faire défiler vers le bas">
+          <span class="hero__scroll-dot"></span>
+          Scrollez pour décoller
+        </a>
+      </div>
+    </section>
+
+    <!-- Concept : vidéo contrôlée par le scroll -->
+    <section id="concept" class="concept">
+      <div class="concept__sticky">
+        <!-- Écran de chargement -->
+        <div class="loader" id="loader">
+          <div class="loader__ring" aria-hidden="true"></div>
+          <p class="loader__text">Préparation du décollage…</p>
+        </div>
+
+        <video
+          id="concept-video"
+          class="concept__video"
+          muted
+          playsinline
+          preload="auto"
+          disablepictureinpicture
+          aria-label="Ascension de Max Drone, du sol jusqu'à l'espace">
+          <source src="assets/max-drone.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Repli si la vidéo ne charge pas -->
+        <div class="concept__fallback" id="video-fallback" hidden>
+          <p>Max Drone s'élève au-dessus des nuages, toujours plus haut.</p>
+        </div>
+
+        <div class="concept__overlay" aria-hidden="true"></div>
+
+        <!-- Textes synchronisés avec le scroll -->
+        <div class="steps" id="steps">
+          <article class="step" data-step="0">
+            <span class="step__kicker">Max Drone</span>
+            <h2 class="step__title">Le ciel n'est plus une limite.</h2>
+          </article>
+          <article class="step" data-step="1">
+            <span class="step__kicker">Décollage</span>
+            <h2 class="step__title">Une nouvelle génération de drone prend son envol.</h2>
+          </article>
+          <article class="step" data-step="2">
+            <span class="step__kicker">Altitude extrême</span>
+            <h2 class="step__title">Conçu pour aller plus haut que jamais.</h2>
+          </article>
+          <article class="step" data-step="3">
+            <span class="step__kicker">Vision globale</span>
+            <h2 class="step__title">Capturez le monde depuis une perspective impossible.</h2>
+          </article>
+          <article class="step" data-step="4">
+            <span class="step__kicker">Jusqu'à l'espace</span>
+            <h2 class="step__title">Max Drone repousse les frontières du vol.</h2>
+          </article>
+          <article class="step" data-step="5">
+            <span class="step__kicker">Max Drone</span>
+            <h2 class="step__title">Le drone qui transforme le ciel en terrain de jeu.</h2>
+          </article>
+        </div>
+
+        <!-- Barre de progression de l'ascension -->
+        <div class="progress" aria-hidden="true">
+          <span class="progress__label">Sol</span>
+          <div class="progress__track"><div class="progress__bar" id="progress-bar"></div></div>
+          <span class="progress__label">Espace</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+      <div class="contact__inner">
+        <p class="contact__eyebrow">Lancement à venir</p>
+        <h2 class="contact__title">Contactez l'équipe Max Drone</h2>
+        <p class="contact__text">
+          Vous souhaitez en savoir plus sur Max Drone, organiser une démonstration
+          ou rejoindre le lancement ? Envoyez-nous un message.
+        </p>
+
+        <form class="form" id="contact-form" novalidate>
+          <div class="form__row">
+            <label class="form__field">
+              <span class="form__label">Nom</span>
+              <input type="text" name="name" autocomplete="name" placeholder="Votre nom" required />
+            </label>
+            <label class="form__field">
+              <span class="form__label">Email</span>
+              <input type="email" name="email" autocomplete="email" placeholder="vous@exemple.com" required />
+            </label>
+          </div>
+          <label class="form__field">
+            <span class="form__label">Message</span>
+            <textarea name="message" rows="5" placeholder="Parlez-nous de votre projet…" required></textarea>
+          </label>
+          <button type="submit" class="btn btn--primary form__submit">Envoyer</button>
+          <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="contact__email">
+          Ou écrivez-nous directement à
+          <a href="mailto:hello@maxdrone.space">hello@maxdrone.space</a>
+        </p>
+      </div>
+      <footer class="footer">© 2026 Max Drone — Concept fictif. Tous droits réservés.</footer>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
