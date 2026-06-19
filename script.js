@@ -35,23 +35,34 @@
   /* ---------- 3. Préparation : on attend que la vidéo soit prête ---------- */
   let duration = 0;
   let ready = false;
+  let rafStarted = false;
 
-  function onReady() {
-    if (ready) return;
-    duration = video.duration || 0;
-    if (!duration || !isFinite(duration)) return; // métadonnées pas encore valides
-    ready = true;
-    hideLoader();
-    onScroll();          // position initiale correcte
-    rafLoop();           // démarre le lissage
+  // On récupère la durée dès les métadonnées…
+  function grabDuration() {
+    if (duration) return;
+    const d = video.duration || 0;
+    if (d && isFinite(d)) duration = d;
   }
 
-  video.addEventListener("loadedmetadata", onReady);
-  video.addEventListener("canplay", onReady);
+  // …mais on n'active le scrub que lorsque la vidéo est suffisamment
+  // mise en mémoire tampon : scruber sur une zone non téléchargée saccade.
+  function enableScrub() {
+    grabDuration();
+    if (ready || !duration) return;
+    ready = true;
+    hideLoader();
+    onScroll();                       // position initiale correcte
+    if (!rafStarted) { rafStarted = true; rafLoop(); }
+  }
+
+  video.addEventListener("loadedmetadata", grabDuration);
+  video.addEventListener("canplaythrough", enableScrub);
+  // Repli : si canplaythrough tarde (réseau lent), on active dès canplay.
+  video.addEventListener("canplay", () => setTimeout(enableScrub, 1200));
   video.addEventListener("error", showFallback);
 
-  // Filet de sécurité : si rien ne se charge après 8s, on affiche le repli.
-  const safety = setTimeout(() => { if (!ready) showFallback(); }, 8000);
+  // Filet de sécurité : si rien ne se charge après 10s, on affiche le repli.
+  const safety = setTimeout(() => { if (!ready) showFallback(); }, 10000);
 
   /* ---------- 4. Calcul de la progression du scroll ---------- */
   let targetTime = 0;
@@ -76,11 +87,12 @@
 
   function rafLoop() {
     if (ready) {
-      // interpolation douce pour éviter les à-coups du seek
-      currentTime += (targetTime - currentTime) * 0.12;
-      if (Math.abs(targetTime - currentTime) < 0.005) currentTime = targetTime;
-      // on n'écrit que si l'écart est perceptible (le seek est coûteux)
-      if (Math.abs(video.currentTime - currentTime) > 0.01) {
+      // interpolation douce vers la cible (suivi fluide du scroll)
+      currentTime += (targetTime - currentTime) * 0.16;
+      if (Math.abs(targetTime - currentTime) < 0.004) currentTime = targetTime;
+      // On ne lance un nouveau seek QUE si le précédent est terminé :
+      // empiler des seeks pendant un scroll rapide est la cause des saccades.
+      if (!video.seeking && Math.abs(video.currentTime - currentTime) > 0.015) {
         try { video.currentTime = currentTime; } catch (_) {}
       }
     }
